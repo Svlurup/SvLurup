@@ -302,7 +302,69 @@
         loadEntries('training', 'training-list');
         loadEntries('info', 'info-list');
     };
-</script>
+</script>function saveEntriesToLocalStorage(sectionId, listId) {
+    const list = document.getElementById(listId);
+    const entries = [];
+    Array.from(list.children).forEach(item => {
+        entries.push({ text: item.firstChild.textContent.trim() });
+    });
+    localStorage.setItem(sectionId, JSON.stringify(entries));
+}
+
+function loadEntriesFromLocalStorage(sectionId, listId) {
+    const storedEntries = JSON.parse(localStorage.getItem(sectionId)) || [];
+    const list = document.getElementById(listId);
+    list.innerHTML = '';
+    storedEntries.forEach(entry => {
+        const listItem = document.createElement('li');
+        listItem.innerHTML = `
+            ${entry.text} 
+            <button class="edit" onclick="editEntry('${sectionId}', '${listId}', this)">Bearbeiten</button> 
+            <button class="remove" onclick="removeEntry('${sectionId}', '${listId}', this)">Löschen</button>
+        `;
+        list.appendChild(listItem);
+    });
+}
+
+// Aktualisiere vorhandene Funktionen, um die Einträge zu speichern
+function addEntry(sectionId, placeholder) {
+    if (!isAdmin) return;
+    const entry = prompt(placeholder);
+    if (entry) {
+        const listId = `${sectionId}-list`;
+        const list = document.getElementById(listId);
+        const listItem = document.createElement('li');
+        listItem.innerHTML = `
+            ${entry} 
+            <button class="edit" onclick="editEntry('${sectionId}', '${listId}', this)">Bearbeiten</button> 
+            <button class="remove" onclick="removeEntry('${sectionId}', '${listId}', this)">Löschen</button>
+        `;
+        list.appendChild(listItem);
+        saveEntriesToLocalStorage(sectionId, listId);
+    }
+}
+
+function editEntry(sectionId, listId, button) {
+    if (!isAdmin) return;
+    const newValue = prompt('Bearbeiten:', button.parentElement.firstChild.textContent.trim());
+    if (newValue) {
+        button.parentElement.firstChild.textContent = newValue + ' ';
+        saveEntriesToLocalStorage(sectionId, listId);
+    }
+}
+
+function removeEntry(sectionId, listId, button) {
+    if (!isAdmin) return;
+    button.parentElement.remove();
+    saveEntriesToLocalStorage(sectionId, listId);
+}
+
+// Beim Laden der Seite die Einträge laden
+window.onload = () => {
+    loadEntriesFromLocalStorage('games', 'games-list');
+    loadEntriesFromLocalStorage('training', 'training-list');
+    loadEntriesFromLocalStorage('info', 'info-list');
+};
 
 </body>
 </html>
