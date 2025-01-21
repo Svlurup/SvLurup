@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SV Lurup 4.E</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        header {
+            background-color: #FF0000;
+            color: white;
+            text-align: center;
+            padding: 60px 20px 40px;
+            position: relative;
+        }
+
+        header img {
+            max-width: 200px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 36px;
+        }
+
+        .contact-link {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .contact-link:hover {
+            text-decoration: underline;
+        }
+
+        .login-link, .logout-link {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .login-link:hover, .logout-link:hover {
+            text-decoration: underline;
+        }
+
+        .logout-link {
+            display: none;
+        }
+
+        nav {
+            background-color: #FF0000;
+            text-align: center;
+            padding: 10px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        section {
+            display: none;
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        section.active {
+            display: block;
+        }
+
+        section h2 {
+            color: #FF0000;
+            border-bottom: 2px solid #FF0000;
+            padding-bottom: 5px;
+            margin-bottom: 20px;
+        }
+
+        section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        section ul li {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #ffe6e6;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        section ul li button {
+            display: none;
+            background-color: #FF0000;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        section ul li button.edit {
+            background-color: #007BFF;
+        }
+
+        section ul li button.edit:hover {
+            background-color: #0056b3;
+        }
+
+        section ul li button:hover {
+            background-color: #cc0000;
+        }
+
+        .add-button {
+            display: none;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background-color: #FF0000;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .add-button:hover {
+            background-color: #cc0000;
+        }
+
+        footer {
+            background-color: #FF0000;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="#contact" class="contact-link" onclick="showSection('contact')">Kontakt</a>
+    <a class="login-link" onclick="login()">Login</a>
+    <a class="logout-link" onclick="logout()">Logout</a>
+    <img src="Samet.jpeg" alt="Team Logo">
+    <h1>SV Lurup 4.E</h1>
+</header>
+
+<nav>
+    <a onclick="showSection('games')">Spielplan</a>
+    <a onclick="showSection('training')">Training</a>
+    <a onclick="showSection('info')">Info</a>
+</nav>
+
+<main>
+    <!-- Spielplan -->
+    <section id="games" class="active">
+        <h2>Spielplan</h2>
+        <button class="add-button" onclick="addEntry('games', 'Neues Spiel hinzufügen')">+ Spiel hinzufügen</button>
+        <ul id="games-list"></ul>
+    </section>
+
+    <!-- Training -->
+    <section id="training">
+        <h2>Training</h2>
+        <button class="add-button" onclick="addEntry('training', 'Neue Trainingszeit hinzufügen')">+ Trainingszeit hinzufügen</button>
+        <ul id="training-list"></ul>
+    </section>
+
+    <!-- Info -->
+    <section id="info">
+        <h2>Info</h2>
+        <button class="add-button" onclick="addEntry('info', 'Neue Information hinzufügen')">+ Info hinzufügen</button>
+        <ul id="info-list"></ul>
+    </section>
+
+    <!-- Kontakt -->
+    <section id="contact">
+        <h2>Kontakt</h2>
+        <ul>
+            <li><strong>Trainer:</strong> Okan - 0176 34142766</li>
+            <li><strong>Co-Trainer:</strong> Samet - 0157 35399356</li>
+            <li><strong>Betreuer/in:</strong> Aysun - 0173 2091749</li>
+            <li><strong>E-Mail:</strong> <a href="mailto:abskrs1988@icloud.com">abskrs1988@icloud.com</a></li>
+        </ul>
+    </section>
+</main>
+
+<footer>
+    &copy; 2025 SV Lurup 4.E. Alle Rechte vorbehalten.
+</footer>
+
+<script>
+    let isAdmin = false;
+
+    function showSection(sectionId) {
+        const sections = document.querySelectorAll('section');
+        sections.forEach(section => section.classList.remove('active'));
+        document.getElementById(sectionId).classList.add('active');
+    }
+
+    function login() {
+        const username = prompt('Benutzername:');
+        const password = prompt('Passwort:');
+
+        if (username === 'Samet' && password === '123456') {
+            isAdmin = true;
+            document.querySelector('.login-link').style.display = 'none';
+            document.querySelector('.logout-link').style.display = 'inline-block';
+            document.querySelectorAll('.add-button, .edit, .remove').forEach(el => el.style.display = 'inline-block');
+            alert('Erfolgreich eingeloggt!');
+        } else {
+            alert('Falscher Benutzername oder Passwort!');
+        }
+    }
+
+    function logout() {
+        isAdmin = false;
+        document.querySelector('.login-link').style.display = 'inline-block';
+        document.querySelector('.logout-link').style.display = 'none';
+        document.querySelectorAll('.add-button, .edit, .remove').forEach(el => el.style.display = 'none');
+        alert('Erfolgreich ausgeloggt!');
+    }
+
+    function loadEntries(sectionId, listId) {
+        const entries = JSON.parse(localStorage.getItem(sectionId)) || [];
+        const list = document.getElementById(listId);
+        list.innerHTML = '';
+        entries.forEach(entry => {
+            const listItem = document.createElement('li');
+            listItem.innerHTML = `${entry.text} <button class="edit" onclick="editEntry('${sectionId}', '${listId}', this)">Bearbeiten</button> <button class="remove" onclick="removeEntry('${sectionId}', '${listId}', this)">Löschen</button>`;
+            list.appendChild(listItem);
+        });
+    }
+
+    function addEntry(sectionId, placeholder) {
+        if (!isAdmin) return;
+        const entry = prompt(placeholder);
+        if (entry) {
+            const entries = JSON.parse(localStorage.getItem(sectionId)) || [];
+            entries.push({ text: entry });
+            localStorage.setItem(sectionId, JSON.stringify(entries));
+            loadEntries(sectionId, `${sectionId}-list`);
+        }
+    }
+
+    function editEntry(sectionId, listId, button) {
+        if (!isAdmin) return;
+        const newValue = prompt('Bearbeiten:', button.parentElement.firstChild.textContent.trim());
+        if (newValue) {
+            const entries = JSON.parse(localStorage.getItem(sectionId));
+            const index = Array.from(button.parentElement.parentElement.children).indexOf(button.parentElement);
+            entries[index].text = newValue;
+            localStorage.setItem(sectionId, JSON.stringify(entries));
+            loadEntries(sectionId, listId);
+        }
+    }
+
+    function removeEntry(sectionId, listId, button) {
+        if (!isAdmin) return;
+        const entries = JSON.parse(localStorage.getItem(sectionId));
+        const index = Array.from(button.parentElement.parentElement.children).indexOf(button.parentElement);
+        entries.splice(index, 1);
+        localStorage.setItem(sectionId, JSON.stringify(entries));
+        loadEntries(sectionId, listId);
+    }
+
+    window.onload = () => {
+        loadEntries('games', 'games-list');
+        loadEntries('training', 'training-list');
+        loadEntries('info', 'info-list');
+    };
+</script>
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyD63HPzgmM2HXA-jyrD5snFerBTu117yQE",
+    authDomain: "svlurup4e.firebaseapp.com",
+    databaseURL: "https://svlurup4e-default-rtdb.firebaseio.com",
+    projectId: "svlurup4e",
+    storageBucket: "svlurup4e.firebasestorage.app",
+    messagingSenderId: "180837967855",
+    appId: "1:180837967855:web:341d19c7f25ff8dff7381a",
+    measurementId: "G-FLTZL703KK"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
+</script>
+</body>
+</html>
