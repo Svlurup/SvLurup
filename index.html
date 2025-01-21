@@ -13,7 +13,6 @@
             color: #333;
         }
 
-        /* Header */
         header {
             background-color: #FF0000;
             color: white;
@@ -33,7 +32,6 @@
             font-size: 36px;
         }
 
-        /* Kontakt-Link */
         .contact-link {
             position: absolute;
             top: 20px;
@@ -49,7 +47,6 @@
             text-decoration: underline;
         }
 
-        /* Login- und Logout-Links */
         .login-link, .logout-link {
             position: absolute;
             top: 20px;
@@ -69,7 +66,6 @@
             display: none;
         }
 
-        /* Navigation */
         nav {
             background-color: #FF0000;
             text-align: center;
@@ -89,7 +85,6 @@
             text-decoration: underline;
         }
 
-        /* Sections */
         section {
             display: none;
             padding: 20px;
@@ -190,47 +185,26 @@
 </nav>
 
 <main>
-    <!-- Spielplan -->
     <section id="games" class="active">
         <h2>Spielplan</h2>
         <button class="add-button" onclick="addGame()">+ Spiel hinzufügen</button>
         <ul id="games-list">
-            <li>
-                Heim - SV Lurup 4.E vs. Hamburg United - 17:00 Uhr - Hamburg
-                <button class="edit" onclick="editEntry(this)">Bearbeiten</button>
-                <button class="remove" onclick="removeEntry(this)">Löschen</button>
-            </li>
+            <!-- Einträge werden aus Local Storage geladen -->
         </ul>
     </section>
 
-    <!-- Training -->
     <section id="training">
         <h2>Training</h2>
-        <button class="add-button" onclick="addEntry('training-list', 'Neue Trainingszeit hinzufügen')">+ Trainingszeit hinzufügen</button>
         <ul id="training-list">
-            <li>
-                Montag: 17:30 - 18:30 Uhr
-                <button class="edit" onclick="editEntry(this)">Bearbeiten</button>
-                <button class="remove" onclick="removeEntry(this)">Löschen</button>
-            </li>
-            <li>
-                Mittwoch: 17:30 - 18:45 Uhr
-                <button class="edit" onclick="editEntry(this)">Bearbeiten</button>
-                <button class="remove" onclick="removeEntry(this)">Löschen</button>
-            </li>
+            <li>Montag: 17:30 - 18:30 Uhr</li>
+            <li>Mittwoch: 17:30 - 18:45 Uhr</li>
         </ul>
     </section>
 
-    <!-- Info -->
     <section id="info">
         <h2>Info</h2>
-        <button class="add-button" onclick="addEntry('info-list', 'Neue Information hinzufügen')">+ Info hinzufügen</button>
         <ul id="info-list">
-            <li>
-                Bitte pünktlich zu den Trainingszeiten erscheinen.
-                <button class="edit" onclick="editEntry(this)">Bearbeiten</button>
-                <button class="remove" onclick="removeEntry(this)">Löschen</button>
-            </li>
+            <li>Bitte pünktlich zu den Trainingszeiten erscheinen.</li>
         </ul>
     </section>
 </main>
@@ -271,6 +245,24 @@
         alert('Erfolgreich ausgeloggt!');
     }
 
+    function loadGames() {
+        const games = JSON.parse(localStorage.getItem('games')) || [];
+        const now = new Date().getTime();
+
+        // Alte Einträge löschen
+        const filteredGames = games.filter(game => now - game.timestamp <= 365 * 24 * 60 * 60 * 1000);
+
+        localStorage.setItem('games', JSON.stringify(filteredGames));
+
+        const list = document.getElementById('games-list');
+        list.innerHTML = '';
+        filteredGames.forEach(game => {
+            const listItem = document.createElement('li');
+            listItem.innerHTML = `${game.text} <button class="edit" onclick="editEntry(this)">Bearbeiten</button> <button class="remove" onclick="removeEntry(this)">Löschen</button>`;
+            list.appendChild(listItem);
+        });
+    }
+
     function addGame() {
         if (!isAdmin) return;
 
@@ -293,21 +285,10 @@
         }
 
         if (gameDetails) {
-            const list = document.getElementById('games-list');
-            const listItem = document.createElement('li');
-            listItem.innerHTML = `${gameDetails} <button class="edit" onclick="editEntry(this)">Bearbeiten</button> <button class="remove" onclick="removeEntry(this)">Löschen</button>`;
-            list.appendChild(listItem);
-        }
-    }
-
-    function addEntry(listId, placeholder) {
-        if (!isAdmin) return;
-        const entry = prompt(placeholder);
-        if (entry) {
-            const list = document.getElementById(listId);
-            const listItem = document.createElement('li');
-            listItem.innerHTML = `${entry} <button class="edit" onclick="editEntry(this)">Bearbeiten</button> <button class="remove" onclick="removeEntry(this)">Löschen</button>`;
-            list.appendChild(listItem);
+            const games = JSON.parse(localStorage.getItem('games')) || [];
+            games.push({ text: gameDetails, timestamp: new Date().getTime() });
+            localStorage.setItem('games', JSON.stringify(games));
+            loadGames();
         }
     }
 
@@ -315,14 +296,24 @@
         if (!isAdmin) return;
         const newValue = prompt('Bearbeiten:', button.parentElement.firstChild.textContent.trim());
         if (newValue) {
-            button.parentElement.firstChild.textContent = newValue;
+            const games = JSON.parse(localStorage.getItem('games'));
+            const index = Array.from(button.parentElement.parentElement.children).indexOf(button.parentElement);
+            games[index].text = newValue;
+            localStorage.setItem('games', JSON.stringify(games));
+            loadGames();
         }
     }
 
     function removeEntry(button) {
         if (!isAdmin) return;
-        button.parentElement.remove();
+        const games = JSON.parse(localStorage.getItem('games'));
+        const index = Array.from(button.parentElement.parentElement.children).indexOf(button.parentElement);
+        games.splice(index, 1);
+        localStorage.setItem('games', JSON.stringify(games));
+        loadGames();
     }
+
+    window.onload = () => loadGames();
 </script>
 
 </body>
