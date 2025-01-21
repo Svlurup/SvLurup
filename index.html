@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SV Lurup 2014</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        /* Header */
+        header {
+            background-color: #FF0000;
+            color: white;
+            text-align: center;
+            padding: 60px 20px 40px;
+            position: relative;
+        }
+
+        header img {
+            max-width: 200px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 36px;
+        }
+
+        /* Kontakt-Link */
+        .contact-link {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .contact-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Login- und Logout-Links */
+        .login-link, .logout-link {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .login-link:hover, .logout-link:hover {
+            text-decoration: underline;
+        }
+
+        .logout-link {
+            display: none; /* Standardmäßig ausgeblendet */
+        }
+
+        /* Navigation */
+        nav {
+            background-color: #FF0000;
+            text-align: center;
+            padding: 10px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        /* Sections */
+        section {
+            display: none;
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        section.active {
+            display: block;
+        }
+
+        section h2 {
+            color: #FF0000;
+            border-bottom: 2px solid #FF0000;
+            padding-bottom: 5px;
+            margin-bottom: 20px;
+        }
+
+        section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        section ul li {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #ffe6e6;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        section ul li button {
+            display: none;
+            background-color: #FF0000;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        section ul li button.edit {
+            background-color: #007BFF;
+        }
+
+        section ul li button.edit:hover {
+            background-color: #0056b3;
+        }
+
+        section ul li button:hover {
+            background-color: #cc0000;
+        }
+
+        .add-button {
+            display: none;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background-color: #FF0000;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .add-button:hover {
+            background-color: #cc0000;
+        }
+
+        footer {
+            background-color: #FF0000;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="#contact" class="contact-link" onclick="showSection('contact')">Kontakt</a>
+    <a class="login-link" onclick="login()">Login</a>
+    <a class="logout-link" onclick="logout()">Logout</a>
+    <img src="Samet.jpeg" alt="Team Logo">
+    <h1>SV Lurup 2014</h1>
+</header>
+
+<nav>
+    <a onclick="showSection('games')">Spielplan</a>
+    <a onclick="showSection('training')">Training</a>
+    <a onclick="showSection('info')">Info</a>
+</nav>
+
+<main>
+    <!-- Spielplan -->
+    <section id="games" class="active">
+        <h2>Spielplan</h2>
+        <button class="add-button" onclick="addEntry('games-list', 'Neues Spiel hinzufügen')">+ Spiel hinzufügen</button>
+        <ul id="games-list">
+            <li>
+                02. Februar 2025 - Freundschaftsspiel FCL - Lurup
+                <button class="edit" onclick="editEntry(this)">Bearbeiten</button>
+                <button onclick="removeEntry(this)">Löschen</button>
+            </li>
+        </ul>
+    </section>
+
+    <!-- Training -->
+    <section id="training">
+        <h2>Training</h2>
+        <button class="add-button" onclick="addEntry('training-list', 'Neue Trainingszeit hinzufügen')">+ Trainingszeit hinzufügen</button>
+        <ul id="training-list">
+            <li>
+                Montag: 17:30 - 18:30 Uhr
+                <button class="edit" onclick="editEntry(this)">Bearbeiten</button>
+                <button onclick="removeEntry(this)">Löschen</button>
+            </li>
+            <li>
+                Mittwoch: 17:30 - 18:45 Uhr
+                <button class="edit" onclick="editEntry(this)">Bearbeiten</button>
+                <button onclick="removeEntry(this)">Löschen</button>
+            </li>
+        </ul>
+    </section>
+
+    <!-- Info -->
+    <section id="info">
+        <h2>Info</h2>
+        <button class="add-button" onclick="addEntry('info-list', 'Neue Information hinzufügen')">+ Info hinzufügen</button>
+        <ul id="info-list">
+            <li>
+                Bitte pünktlich zu den Trainingszeiten erscheinen.
+                <button class="edit" onclick="editEntry(this)">Bearbeiten</button>
+                <button onclick="removeEntry(this)">Löschen</button>
+            </li>
+        </ul>
+    </section>
+
+    <!-- Kontakt -->
+    <section id="contact">
+        <h2>Kontakt</h2>
+        <p><strong>Trainer:</strong> Okan 0176 34142766</p>
+        <p><strong>Co-Trainer:</strong> Samet 0157 35399356</p>
+        <p><strong>Betreuer/in:</strong> Aysun 0173 2091749</p>
+        <p><strong>E-Mail:</strong> abskrs1988@icloud.com</p>
+    </section>
+</main>
+
+<footer>
+    &copy; 2025 SV Lurup 2014. Alle Rechte vorbehalten.
+</footer>
+
+<script>
+    let isAdmin = false;
+
+    function showSection(sectionId) {
+        const sections = document.querySelectorAll('section');
+        sections.forEach(section => section.classList.remove('active'));
+        document.getElementById(sectionId).classList.add('active');
+    }
+
+    function login() {
+        const username = prompt('Benutzername:');
+        const password = prompt('Passwort:');
+
+        if (username === 'Samet' && password === '123456') {
+            isAdmin = true;
+            document.querySelector('.login-link').style.display = 'none';
+            document.querySelector('.logout-link').style.display = 'inline-block';
+            document.querySelectorAll('.add-button, .edit').forEach(el => el.style.display = 'inline-block');
+            alert('Erfolgreich eingeloggt!');
+        } else {
+            alert('Falscher Benutzername oder Passwort!');
+        }
+    }
+
+    function logout() {
+        isAdmin = false;
+        document.querySelector('.login-link').style.display = 'inline-block';
+        document.querySelector('.logout-link').style.display = 'none';
+        document.querySelectorAll('.add-button, .edit').forEach(el => el.style.display = 'none');
+        alert('Erfolgreich ausgeloggt!');
+    }
+
+    function addEntry(listId, placeholder) {
+        if (!isAdmin) return;
+        const entry = prompt(placeholder);
+        if (entry) {
+            const list = document.getElementById(listId);
+            const listItem = document.createElement('li');
+            listItem.innerHTML = `${entry} <button class="edit" onclick="editEntry(this)">Bearbeiten</button> <button onclick="removeEntry(this)">Löschen</button>`;
+            list.appendChild(listItem);
+        }
+    }
+
+    function editEntry(button) {
+        if (!isAdmin) return;
+        const newValue = prompt('Bearbeiten:', button.parentElement.firstChild.textContent.trim());
+        if (newValue) {
+            button.parentElement.firstChild.textContent = newValue;
+        }
+    }
+
+    function removeEntry(button) {
+        if (!isAdmin) return;
+        button.parentElement.remove();
+    }
+</script>
+
+</body>
+</html>
